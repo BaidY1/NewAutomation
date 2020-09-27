@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Thyeme Leaf Automate System</title>
+</head>
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.css.map" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style type="text/css" media="screen">
+#editor {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.dataGet {
+	float: center;
+}
+
+.column {
+	float: right;
+	width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.custom-menu {
+	z-index: 1000;
+	position: absolute;
+	background-color: #C0C0C0;
+	border: 1px solid black;
+	padding: 2px;
+}
+
+.editorBody {
+	padding: 4px;
+	margin-left: 20px;
+	
+}
+#alight__right{
+padding-bottom:100px;
+}
+</style>
+<link rel="stylesheet" href="/css/codeeditor.css">
+</head>
+<body>
+
+
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-6 editorBody">
+				<img id='output'>
+				<div>
+					<form method="POST" enctype="multipart/form-data" action="/upload">
+						<table>
+							<tr>
+								<td>File to upload:</td>
+								<td><input type="file" name="files"
+									onchange='readFile(this)' id="files" multiple /></td>
+							</tr>
+						</table>
+					</form>
+				</div>
+
+				<div class="editor">
+					<div class="editor__wrapper">
+						<div class="editor__body">
+							<div id="editorCode" class="editor__code"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6 center" style="   float: right;margin-right: 10%;
+      margin-left: 0;">
+				<div id="alight__right" class="dataGet form-group">
+				
+					 <button class="btn btn-warning" id="increaseID"><i  class="fa fa-angle-left"></i></button>
+					 <button class="btn btn-warning" id="decreaseID"><i class="fa fa-angle-right"></i></button>
+					<input class="form-control" type="text" name="requirement_id" id="req_id"
+					 disabled/>
+					</hr>
+				
+					<input class="form-control" type="number" name="start" id="start"
+						placeholder="Start Line" />
+					</hr>
+					<input class="form-control" type="number" name="end" id="end"
+						placeholder="End Line" />
+					</hr>
+					<input class="form-control" type="text" name="description"
+						id="description" placeholder="Description" />
+					</hr>
+					<textarea id="query" placeholder="Query" class="form-control" name="query" rows="4" cols="50" ></textarea>
+					<textarea id="message" placeholder="Message" class="form-control" name="message" rows="4" cols="50" ></textarea>
+					<textarea id="shortdesc" placeholder="Short Description" class="form-control" name="shortDesc" rows="4" cols="50" disabled></textarea>
+					
+					<button type="submit" value="Save to DB" class="btn btn-primary"
+						onClick="onClickSaveDB(this)">Save To DB</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- POPUP -->
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Short Description</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" id="shortDes" type="text" maxlength="15" rows="4" cols="50" placeholder="Short Description"/></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="shortButton" class="btn btn-primary">Save Short Description</button>
+      </div>
+    </div>
+  </div>
+</div>
+	<!--  CUSTOM MENU -->
+	<script src="/js/src-min/ace.js"></script>
+	<script src="/js/src-min/mode-java.js"></script>
+	<script src="/js/editor.js"></script>
+	<script src="/jquery-3.5.1.min.js"></script>
+	<script src="/js/jquery.ui.position.js"></script>
+	<link href="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.css"
+		rel="stylesheet" type="text/css" />
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script
+		src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js"
+		type="text/javascript"></script>
+<script src="/js/bootstrap.bundle.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+	<script
+		src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.ui.position.min.js"
+		type="text/javascript"></script>
+
+	<script>
+		//$();
+		$(document).ready(function() {
+	$("#editorCode").mouseenter(
+		function() {$("#editorCode")
+		.contextmenu(function() {
+	$.contextMenu({
+	selector : '#editorCode',
+	callback : function(key,options,e) {
+		var m = "clicked: "+ key;
+		console.log(m);
+		var editor = ace.edit("editorCode");
+		var xexe = editor.getSelectedText();
+		var selectionRange = editor.getSelectionRange();
+		var startline=selectionRange.start.row+1;
+		$("#start").val(startline);
+		var endline=selectionRange.end.row;
+		$("#end").val(endline++);
+		console.log(startline);
+		console.log(endline);
+		if (key == 'query') {
+			$('#query').val(xexe);
+			var examps = 0;
+			$('.ace_gutter-cell ').each(function(index, value) {
+			if ($(this).text() == startline) {
+					examps = startline;
+					$(this).css('background-color', 'blue');
+				} else if (examps <= endline && examps != 0) {
+					$(this).css('background-color', 'blue');
+					examps++;
+				}
+			});
+			
+			} else if (key == 'message') {
+			$('#message').val(xexe);
+			var examps = 0;
+			$('.ace_gutter-cell ').each(function(index, value) {
+			if ($(this).text() == startline) {
+					examps = startline;
+					$(this).css('background', 'red');
+				} else if (examps <= endline && examps != 0) {
+					$(this).css('background', 'red');
+					examps++;
+				}
+			});
+			
+			}
+			else if(key=='description'){
+				$("#exampleModal").modal('show');
+			}
+		//idhr ab this se get karo aur value paste kar do text box mein
+		// ace_line
+		// div.ace_line
+	},
+		items : {
+	"query" : {
+		name : "Query"
+	},	
+	"message" : {
+		name : "Message"
+		},
+		"description" : {
+			name : "Short Description"
+			}
+									}
+	});
+		});
+	});
+
+						});
+		$('#shortButton').click(function(){
+			var x=$('#shortDes').val();
+			$("#shortdesc").val(x);
+			alert(x);
+		});
+		function readFile(input) {
+			let file = input.files[0];
+
+			let reader = new FileReader();
+
+			reader.readAsText(file);
+			var x = document.getElementById('editorCode');
+			reader.onload = function() {
+				console.log(reader.result);
+				var editor = ace.edit("editorCode");
+				editor.setTheme("ace/theme/monokai");
+				editor.getSession().setMode("ace/mode/java");
+				var z = 0;
+				var customPosition = {
+					row : 0,
+					column : 0
+				};
+				editor.session.insert(customPosition, reader.result);
+				$("#req_id").val("U.1.P.1");
+			};
+
+			reader.onerror = function() {
+				console.log(reader.error);
+
+			};
+
+		}
+		function onClickSaveDB(x) {
+			var start_id = document.getElementById('start').value;
+			var end_id = document.getElementById('end').value;
+			var description = document.getElementById('description').value;
+			var text = '{ "start_id" :' + start_id + ',' + ' "end_id":'
+					+ end_id + ',' + ' "description":' + description + '' + '}';
+var query=document.getElementById('query').textContent
+.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
+console.log(query);
+var message=document.getElementById('message').value;
+			highlightCode(start_id, end_id);
+			/* var data={"start_id :"+start_id+
+			", end_id:"+end_id+		
+			};
+			 */
+			var formData = {
+				firstname : start_id,
+				lastname : end_id
+			}
+			var search = "HELLO";
+			var obj = "";
+			var filename = $('input[type=file]').val().replace(/.*(\/|\\)/, '')
+			alert(filename);
+			$.ajax({
+				type : "POST",
+				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+				url : "/api/upload?start_line="+start_id+"&end_line="+end_id+"&description="+description+"&files="+filename+"&query="+query+"&message="+message,
+				//start_line=1&end_line=12&description=asd&files=asdasd&query=asdasd&message=asdasd
+				/* data : {'start_line' : start_id,
+					'end_line' : end_id,
+					'description' : description,
+					'files' : filename,
+				    'query':query,
+					'message':message}, */
+						success : function(data) {
+							alert("Data Successfully Saved");
+						},
+						error : function(data) {
+
+							alert("Server Error");
+							console.log(data);
+						}
+
+					});
+		}
+		function highlightCode(z, x) {
+			$(document).ready(function() {
+				//	$('.ace_gutter-cell ').css('background-color','red');
+				//	 $('.ace_gutter-cell ').each(function(index){ $('.ace_gutter-cell ').attr('id',$('.ace_gutter-cell ').text())});	
+
+				var examp = 0;
+				$('.ace_gutter-cell ').each(function(index, value) {
+					if ($(this).text() == z) {
+						examp = z;
+						$(this).css('background-color', 'green');
+					} else if (examp < x && examp != 0) {
+						$(this).css('background-color', 'green');
+						examp++;
+					}/* 
+														else if($(this).text()==x){
+															$(this).css('background-color','green');		
+														} */
+				});
+			});
+		}
+	</script>
+
+</body>
+</html>

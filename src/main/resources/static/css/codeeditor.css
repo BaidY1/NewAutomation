@@ -1,0 +1,32 @@
+.editor{
+    height:150px;
+    width: 150px;
+ }
+#alight__right{
+    
+float: right;
+}
+.editor__wrapper{
+    width:600px;
+    height:600px;
+    justify-content: center;
+    background: var(--editor-bg);
+    border-radius: 3px;
+    border: 1px solid;
+}
+.editor__body{
+    flex:1;
+}
+.editor__footer{
+    display: flex;
+}
+.editor__code{
+    position: relative;
+    height:600px;
+    width: 6    00px;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    border:1px solid  ; 
+}
