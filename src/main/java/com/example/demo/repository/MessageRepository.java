@@ -18,8 +18,8 @@ import com.example.demo.entity.MessageFile;
 @Repository
 public interface MessageRepository extends JpaRepository<MessageFile, Integer> {
 	
-	@Query(value="SELECT e.start_line,e.end_line,e.message,e.description,e.query,f.file_path from message_file as e " + 
-			"inner join save_document as f on f.Id=e.message_Id " + 
+	@Query(value="SELECT e.message_id,e.start_line,e.end_line,e.message,e.description,e.query,f.file_path from message_file as e " + 
+			"inner join save_document as f on f.id=e.file_id " + 
 			"where e.file_id=?1",nativeQuery=true)
 	public List<MessageFile> printExcelMessage(@Param("fileName") int x);
 	

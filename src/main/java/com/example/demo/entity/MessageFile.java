@@ -1,13 +1,19 @@
 package com.example.demo.entity;
 
+
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.springframework.data.annotation.Transient;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.NoArgsConstructor;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 
 @Entity
 @NoArgsConstructor
@@ -15,6 +21,7 @@ public class MessageFile {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="message_id")
 	int messageId;
 	String message;
 	String query;
@@ -22,6 +29,7 @@ public class MessageFile {
 	String end_line;
 	String description;
 
+	
 	public String getQuery() {
 		return query;
 	}
