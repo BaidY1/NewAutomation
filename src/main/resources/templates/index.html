@@ -84,8 +84,9 @@ padding-bottom:100px;
       margin-left: 0;">
 				<div id="alight__right" class="dataGet form-group">
 				
-					 <button class="btn btn-warning" id="increaseID"><i  class="fa fa-angle-left"></i></button>
-					 <button class="btn btn-warning" id="decreaseID"><i class="fa fa-angle-right"></i></button>
+					 <button class="btn btn-warning" id="increaseID" onClick="onIncrementingSameCase()"><i  class="fa fa-angle-left"></i></button>
+					 <button class="btn btn-warning" id="decreaseID" onClick="onIncrementingSubCase()"><i class="fa fa-angle-right"></i></button>
+					 <button class="btn btn-warning" id="ID" onClick="ondecrement()"><i class="fa fa-times"></i></button>
 					<input class="form-control" type="text" name="requirement_id" id="req_id"
 					 disabled/>
 					</hr>
@@ -119,7 +120,7 @@ padding-bottom:100px;
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Short Description</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         
@@ -128,7 +129,7 @@ padding-bottom:100px;
         <textarea class="form-control" id="shortDes" type="text" maxlength="15" rows="4" cols="50" placeholder="Short Description"/></textarea>
       </div>
       <div class="modal-footer">
-        <button type="button" id="shortButton" class="btn btn-primary">Save Short Description</button>
+        <button type="button" id="shortButton" onClick="closeModal()" class="btn btn-primary">Save Short Description</button>
       </div>
     </div>
   </div>

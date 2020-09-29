@@ -52,37 +52,11 @@ public class HomeApiController {
 	private FileAttributes tempFileObj;
 	private MessageFile tempMessageObj;
 	private List<MessageFile> tempMessageList;
-
-	private static String[] columns = {"Name", "Email", "Date Of Birth", "Salary"};
 	@Autowired
 	private FileService fileSaves;
 	@Autowired
 	private MessageService messageSaves;
 	private String fileName = null;
-
-	private void createExcelFile() {
-		workbook = new XSSFWorkbook();
-		sheet = workbook.createSheet("First");
-
-		Row row = sheet.createRow(0);
-
-		CellStyle style = workbook.createCellStyle();
-		XSSFFont font = workbook.createFont();
-		font.setBold(true);
-		font.setFontHeight(16);
-		style.setFont(font);
-
-		createCell(row, 0, "File Name", style);
-		createCell(row, 1, "Start Line", style);
-		createCell(row, 2, "End Line", style);
-	}
-
-	private void createCell(Row row, int columnCount, Object value, CellStyle style) {
-		sheet.autoSizeColumn(columnCount);
-		Cell cell = row.createCell(columnCount);
-		cell.setCellValue((String) value);
-		cell.setCellStyle(style);
-	}
 
 	@Autowired
 	private FileService fileSave;
@@ -90,26 +64,6 @@ public class HomeApiController {
 	@GetMapping("/readFile")
 	public String readFile() {
 		return "index.html";
-	}
-
-	@GetMapping("/printExcel")
-	public String getFile(@RequestParam("getFileName") String z) {
-		fileSave.getFileName(z);
-		return "YESS";
-	}
-
-	@GetMapping("/linees")
-	public int getDataFromDb(@RequestParam("getFile") String z) {
-
-		int ze = fileSave.getFileById(z);
-		System.out.print(ze);
-		List<MessageFile> tempTocheck = messageSaves.printExcelFromId(ze);
-
-		for (MessageFile e : tempTocheck) {
-			System.out.print("YES");
-			System.out.print(e.getMessage());
-		}
-		return ze;
 	}
 
 	/*
@@ -129,183 +83,111 @@ public class HomeApiController {
 	 * 
 	 * } }
 	 */
-	 @GetMapping("/printItNow")
-		public void export(HttpServletResponse response,@RequestParam("fileName") String z) throws IOException {
-		 Workbook work=new XSSFWorkbook();			 
-		 
-	 Sheet sheet=work.createSheet("Code File");
-	 Row header = sheet.createRow(0);
-	 CellStyle headerStyle = work.createCellStyle();
-	 headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
-	 headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-	  
-	 XSSFFont font = ((XSSFWorkbook) work).createFont();
-	 font.setFontName("Arial");
-	 font.setFontHeightInPoints((short) 16);
-	 font.setBold(true);
-	 headerStyle.setFont(font);
-	 
-	 Cell headerCell = header.createCell(0);
-	 headerCell.setCellValue("Start Line");
-	 headerCell.setCellStyle(headerStyle);
-	  
-	 headerCell = header.createCell(1);
-	 headerCell.setCellValue("End Line");
-	 headerCell.setCellStyle(headerStyle);
+	@GetMapping("/printItNow")
+	public void export(HttpServletResponse response, @RequestParam("fileName") String z) throws IOException {
+		Workbook work = new XSSFWorkbook();
 
-	 headerCell = header.createCell(2);
-	 headerCell.setCellValue("Description");
-	 headerCell.setCellStyle(headerStyle);
+		Sheet sheet = work.createSheet("Code File");
+		Row header = sheet.createRow(0);
+		CellStyle headerStyle = work.createCellStyle();
+		headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-	 headerCell = header.createCell(3);
-	 headerCell.setCellValue("Query");
-	 headerCell.setCellStyle(headerStyle);
+		XSSFFont font = ((XSSFWorkbook) work).createFont();
+		font.setFontName("Arial");
+		font.setFontHeightInPoints((short) 16);
+		font.setBold(true);
+		headerStyle.setFont(font);
 
-	 headerCell = header.createCell(4);
-	 headerCell.setCellValue("Message");
-	 headerCell.setCellStyle(headerStyle);
+		Cell headerCell = header.createCell(0);
+		headerCell.setCellValue("Start Line");
+		headerCell.setCellStyle(headerStyle);
 
-	 CellStyle style = work.createCellStyle();
-	 style.setWrapText(true);
-	  int getNam=Integer.parseInt(fileSave.getFileName(z));
-	  List<MessageFile> msg=messageSaves.printExcelFromId(getNam);
-	 int r=1;
-	  Row rows=null;
-	  
-	 for(MessageFile f:msg) {
-		int	i=0;
-		 rows = sheet.createRow(r);
-		 Cell cell = rows.createCell(i);
-		 
-		 cell = rows.createCell(i++);
-		 cell.setCellValue(f.getStart_line());
-		 cell.setCellStyle(style);
+		headerCell = header.createCell(1);
+		headerCell.setCellValue("End Line");
+		headerCell.setCellStyle(headerStyle);
 
-		 cell=rows.createCell(i++);
-		 cell.setCellValue(f.getEnd_line());
-		 cell.setCellStyle(style);
+		headerCell = header.createCell(2);
+		headerCell.setCellValue("Description");
+		headerCell.setCellStyle(headerStyle);
 
-		 cell=rows.createCell(i++);
-		 cell.setCellValue((f.getDescription()==null)?null:f.getDescription());
-		 cell.setCellStyle(style);
+		headerCell = header.createCell(3);
+		headerCell.setCellValue("Query");
+		headerCell.setCellStyle(headerStyle);
 
-		 cell=rows.createCell(i++);
-		 cell.setCellValue((f.getQuery()==null)?null:f.getQuery());
-		 cell.setCellStyle(style);
+		headerCell = header.createCell(4);
+		headerCell.setCellValue("Message");
+		headerCell.setCellStyle(headerStyle);
 
-		 cell=rows.createCell(i++);
-		 cell.setCellValue(f.getMessage());
-		 cell.setCellStyle(style);
-		
+		headerCell = header.createCell(5);
+		headerCell.setCellValue("Short Description");
+		headerCell.setCellStyle(headerStyle);
+		CellStyle style = work.createCellStyle();
+		style.setWrapText(true);
+		int getNam = Integer.parseInt(fileSave.getFileName(z));
+		List<MessageFile> msg = messageSaves.printExcelFromId(getNam);
+		int r = 1;
+		Row rows = null;
+
+		for (MessageFile f : msg) {
+			int i = 0;
+			rows = sheet.createRow(r);
+			Cell cell = rows.createCell(i);
+
+			cell = rows.createCell(i++);
+			cell.setCellValue(f.getStart_line());
+			cell.setCellStyle(style);
+
+			cell = rows.createCell(i++);
+			cell.setCellValue(f.getEnd_line());
+			cell.setCellStyle(style);
+
+			cell = rows.createCell(i++);
+			cell.setCellValue((f.getDescription() == null) ? null : f.getDescription());
+			cell.setCellStyle(style);
+
+			cell = rows.createCell(i++);
+			cell.setCellValue((f.getQuery() == null) ? null : f.getQuery());
+			cell.setCellStyle(style);
+
+			cell = rows.createCell(i++);
+			cell.setCellValue(f.getMessage());
+			cell.setCellStyle(style);
+			
+			cell = rows.createCell(i++);
+			cell.setCellValue(f.getShort_description());
+			cell.setCellStyle(style);
 
 			r++;
-	 }
-	 
-	 
-	 File currDir = new File(".");
-	 String path = currDir.getAbsolutePath();
-	 String fileLocation = path.substring(0, path.length() - 1) +z+".xlsx";
-	 FileOutputStream outputStream = new FileOutputStream(fileLocation);
-	 
-	 response.setContentType("application/vnd.ms-excel");
-	 response.setHeader("Content-Disposition", "attachment; filename=sample.xls");
-	 ServletOutputStream outputStreams=response.getOutputStream();
-
-	 work.write(outputStreams);
-	 work.close();
-	
-	 outputStreams.close();
-	 outputStream.close();
-System.out.print("Chalo ge");
-	 }
-	 
-	@PostMapping("/SaveItAll")
-	public String saveDocument(@RequestParam("start_line") String start_line, @RequestParam("end_line") String z,
-			@RequestParam("description") String s, @RequestParam("files") String paths,
-			@RequestParam("query") String queries, @RequestParam("message") String msg) {
-
-		FileAttributes obj = new FileAttributes();
-		obj.setFilePath(paths);
-
-		MessageFile obje = new MessageFile();
-		obje.setMessage(msg);
-
-		List<MessageFile> list = new ArrayList<MessageFile>();
-		list.add(obje);
-		obj.setMessageObj(list);
-		fileSave.saveFile(obj);
-
-		/*
-		 * if(f.getStart_line().contains(null) || f.getEnd_line().contains(null) ||
-		 * f.getDescription().contains(null)) { return "Values Cannot Be Nulled"; }
-		 * 
-		 */
-		// else {
-		// fileSave.saveFile(obj);
-		// }
-
-		return "OKAY";
-	}
-
-	@GetMapping("/checkResult")
-	public String getItYar(@RequestParam("fileName") String z) {
-		String toprint = fileSave.getFileName(z);
-		return toprint;
-
-	}
-
-	@PostMapping("/api/upload")
-	public String saveIt(@RequestParam("start_line") String start_line, @RequestParam("end_line") String z,
-			@RequestParam("description") String s, @RequestParam("files") String paths,
-			@RequestParam("query") String queries, @RequestParam("message") String msg) {
-
-		int checkIfExist = (getItYar(paths) == null) ? 0 : Integer.parseInt(getItYar(paths));
-		if (checkIfExist == 0) {
-
-			tempFileObj = new FileAttributes();
-			tempMessageObj = new MessageFile();
-			tempMessageList = new ArrayList<MessageFile>();
-
-			tempFileObj.setFilePath(paths);
-			tempMessageObj.setQuery(queries);
-			tempMessageObj.setMessage(msg);
-			tempMessageObj.setDescription(s);
-			tempMessageObj.setStart_line(start_line);
-			tempMessageObj.setEnd_line(z);
-
-			tempMessageList.add(tempMessageObj);
-
-			tempFileObj.setMessageObj(tempMessageList);
-
-			fileSaves.saveFile(tempFileObj);
-			return "First Saved";
-		} else {
-			// tempFileObj=fileSaves.getFileById(checkIfExist);
-			tempMessageObj = new MessageFile();
-			tempMessageList = new ArrayList<MessageFile>();
-			tempMessageObj.setQuery(queries);
-			tempMessageObj.setMessage(msg);
-			tempMessageObj.setDescription(s);
-			tempMessageObj.setStart_line(start_line);
-			tempMessageObj.setEnd_line(z);
-			messageSaves.saveExistingFile(checkIfExist, start_line, z, s, queries, msg);
-
-			return "Second Saved";
 		}
 
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-Disposition", "attachment; filename="+z+".xls");
+		ServletOutputStream outputStreams = response.getOutputStream();
+
+		work.write(outputStreams);
+		work.close();
+
+		outputStreams.close();
 	}
 
-	@GetMapping("/getCheck")
-	public Iterable<FileAttributes> getFile() {
-		return fileSave.getFiles();
+	// This Methods Get The File Name with Correspondence to ID
+	@GetMapping("/checkResult")
+	public String GetFileName(@RequestParam("fileName") String z) {
+		String toprint = fileSave.getFileName(z);
+		return toprint;
 	}
-
-	@PostMapping("/api/postCheck/{data}")
-	public String check(@RequestParam("data") String data) {
-		System.out.print(data);
-		return "OK";
-	}
-
+	
+	//It gets the lines according to that file record saved in DB
+@GetMapping("/getLinesFromDb")
+public List<MessageFile> getNumberOfLines(@RequestParam("FileName") String s) {
+	int fileId=(fileSave.getFileName(s)==null)?0:Integer.parseInt(fileSave.getFileName(s));
+	
+	List<MessageFile> lines=messageSaves.printExcelFromId(fileId);
+	
+return lines;
+}
+	// This Method Sends Two Request Body Object and stores it in DB
 	@ResponseBody
 	@PostMapping(value = "/sendJson")
 	public String post(@RequestBody FileAndMessage files) {
@@ -313,7 +195,7 @@ System.out.print("Chalo ge");
 		System.out.print(paths);
 		System.out.print(files.msgFile.getMessage());
 
-		int checkIfExist = (getItYar(paths) == null) ? 0 : Integer.parseInt(getItYar(paths));
+		int checkIfExist = (GetFileName(paths) == null) ? 0 : Integer.parseInt(GetFileName(paths));
 
 		if (checkIfExist == 0) {
 
@@ -327,23 +209,20 @@ System.out.print("Chalo ge");
 			tempMessageObj.setDescription(files.msgFile.getDescription());
 			tempMessageObj.setStart_line(files.msgFile.getStart_line());
 			tempMessageObj.setEnd_line(files.msgFile.getEnd_line());
-
+            tempMessageObj.setShort_description(files.msgFile.getShort_description());
 			tempMessageList.add(tempMessageObj);
 
 			tempFileObj.setMessageObj(tempMessageList);
 
 			fileSaves.saveFile(tempFileObj);
 			return "First Saved";
-		} 
-		else
-		{ 
-						messageSaves.saveExistingFile(checkIfExist, files.msgFile.getStart_line(), files.msgFile.getEnd_line(), files.msgFile.getDescription(),
-					files.msgFile.getQuery(), files.msgFile.getMessage());
+		} else {
+			messageSaves.saveExistingFile(checkIfExist, files.msgFile.getStart_line(), files.msgFile.getEnd_line(),
+					files.msgFile.getDescription(), files.msgFile.getQuery(),files.msgFile.getShort_description(), files.msgFile.getMessage());
 
 			return "Second Saved";
 		}
 
 	}
-	
 
 }

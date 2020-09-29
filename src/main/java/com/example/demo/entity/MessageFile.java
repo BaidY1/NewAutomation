@@ -23,13 +23,24 @@ public class MessageFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="message_id")
 	int messageId;
+	@Column(length=4000)
 	String message;
+	@Column(length=4000)
 	String query;
 	String start_line;
 	String end_line;
+	@Column(length=5000)
 	String description;
-
+    String short_description;
 	
+	public String getShort_description() {
+		return short_description;
+	}
+
+	public void setShort_description(String short_description) {
+		this.short_description = short_description;
+	}
+
 	public String getQuery() {
 		return query;
 	}
