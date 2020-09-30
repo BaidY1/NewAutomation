@@ -171,7 +171,8 @@ public class HomeApiController {
 		}
 
 		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment; filename="+z+".xls");
+		String filename=z.substring(0, z.length()-5);
+		response.setHeader("Content-Disposition", "attachment; filename="+filename+".xls");
 		ServletOutputStream outputStreams = response.getOutputStream();
 
 		work.write(outputStreams);

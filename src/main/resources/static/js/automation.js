@@ -128,9 +128,7 @@ var temp=$("#req_id").val();
 if(temp=="P"){
 	
 }else{
-	console.log(temp);
 var prevs=temp.substring(temp.length-1,temp.length);//"P."+incrementSameCase++
-console.log(prevs);
 prevs++;
 temp=temp.substring(0,temp.length-1)+prevs;
 $("#req_id").val(temp);
@@ -151,8 +149,7 @@ function ondecrement(){
 	}else{
 	var toReplace=s.substring(0,s.length-2);
 	console.log(toReplace);
-	pos1--;
-	pos2--;
+	
 $("#req_id").val(toReplace);
 	}
 }
