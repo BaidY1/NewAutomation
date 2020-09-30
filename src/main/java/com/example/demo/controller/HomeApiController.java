@@ -100,8 +100,13 @@ public class HomeApiController {
 		headerStyle.setFont(font);
 
 		Cell headerCell = header.createCell(0);
+		headerCell.setCellValue("Requirement ID");
+		headerCell.setCellStyle(headerStyle);
+
+		headerCell = header.createCell(1);
 		headerCell.setCellValue("Start Line");
 		headerCell.setCellStyle(headerStyle);
+
 
 		headerCell = header.createCell(1);
 		headerCell.setCellValue("End Line");
@@ -133,6 +138,10 @@ public class HomeApiController {
 			int i = 0;
 			rows = sheet.createRow(r);
 			Cell cell = rows.createCell(i);
+
+			cell = rows.createCell(i++);
+			cell.setCellValue(f.getRequirementid());
+			cell.setCellStyle(style);
 
 			cell = rows.createCell(i++);
 			cell.setCellValue(f.getStart_line());
