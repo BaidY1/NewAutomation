@@ -1,7 +1,10 @@
 
 var incrementSameCase=1;
 var incrementSubCase=1;
+
 var prev=0;
+var pos1=2;
+var pos2=3;
 function onClickGenerateExcel() {
 	var fileName = $('input[type=file]').val().replace(/.*(\/|\\)/, '')
 	$(document).ready(function() {
@@ -112,6 +115,7 @@ function readFile(input) {
 		};
 		editor.session.insert(customPosition, reader.result);
 		highlightCode();
+		$("#req_id").val("P."+incrementSameCase);
 	};
 
 	reader.onerror = function() {
@@ -119,18 +123,38 @@ function readFile(input) {
 	};
 
 }
-
+function onIncreasingValue(){
+var temp=$("#req_id").val();
+if(temp=="P"){
+	
+}else{
+	console.log(temp);
+var prevs=temp.substring(temp.length-1,temp.length);//"P."+incrementSameCase++
+console.log(prevs);
+prevs++;
+temp=temp.substring(0,temp.length-1)+prevs;
+$("#req_id").val(temp);
+}
+}
 function onIncrementingSameCase(){
-prev=$("#req_id").val("P."+incrementSameCase++);
+	
 }
 function onIncrementingSubCase(){
 var s=$("#req_id").val();
 prev=s;
 $("#req_id").val(s+"."+incrementSubCase);
-}
+} 
 function ondecrement(){
-$("#req_id").val(prev);
-	
+	var s=$("#req_id").val();
+	if(s=="P"){
+		
+	}else{
+	var toReplace=s.substring(0,s.length-2);
+	console.log(toReplace);
+	pos1--;
+	pos2--;
+$("#req_id").val(toReplace);
+	}
 }
 function closeModal(){
 	$(document).ready(function(){
@@ -148,6 +172,7 @@ function onClickSaveDB(x) {
 	var text = '{ "start_id" :' + start_id + ',' + ' "end_id":'
 		+ end_id + ',' + ' "description":' + description + '' + '}';
 	var query = document.getElementById('query').value;
+	var requirement=document.getElementById('req_id').value;
 	console.log(query);
 	console.log("Its Query");
 	var message = document.getElementById('message').value;
@@ -164,7 +189,7 @@ function onClickSaveDB(x) {
 	var obj = "";
 	var filename = $('input[type=file]').val().replace(/.*(\/|\\)/, '')
 	var filesTosa = { "filePath": filename };
-	var msg = { "message": message, "start_line": start_id, "end_line": end_id, "query": query,"short_description":shortdesc, "description": description };
+	var msg = { "message": message, "start_line": start_id, "end_line": end_id, "query": query,"short_description":shortdesc, "description": description,"requirementid":requirement };
 	var newObj = {
 		file: filesTosa,
 		msgFile: msg
@@ -179,7 +204,7 @@ function onClickSaveDB(x) {
 				$("#start").val("");
 				$("#end").val("");
 				$("#description").val("");
-				$("shortDes").val("");
+				$( "shortDes").val("");
 				$("#query").val("");
 				$("#message").val("");
 			alert("Data Successfully Saved");

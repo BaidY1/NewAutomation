@@ -24,8 +24,8 @@ public class MessageService {
 	}
 
 	public void saveExistingFile(int file_id, String startlines, String endlines, String desc, String query,
-			String shortdesc, String message) {
-		messageObj.saveExisting(startlines, endlines, desc, query, message, shortdesc, file_id);
+			String shortdesc, String message,String req) {
+		messageObj.saveExisting(startlines, endlines, desc, query, message, shortdesc, file_id,req);
 	}
 
 	

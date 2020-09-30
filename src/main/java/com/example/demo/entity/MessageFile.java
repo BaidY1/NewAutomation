@@ -28,6 +28,15 @@ public class MessageFile {
 	@Column(length=4000)
 	String query;
 	String start_line;
+	String requirementid;
+	public String getRequirementid() {
+		return requirementid;
+	}
+
+	public void setRequirementid(String requirementid) {
+		this.requirementid = requirementid;
+	}
+
 	String end_line;
 	@Column(length=5000)
 	String description;
